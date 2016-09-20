@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-var users = require('./routes/getPlaces');
+var getPlaces = require('./routes/getPlaces');
 
 var sweet = require('sweet.js');
 sweet.loadMacro('cspjs');
