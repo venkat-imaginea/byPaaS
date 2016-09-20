@@ -10,7 +10,9 @@
     "max_memory_restart" : "400M",
     "env": {
 	"PORT" : 1234,
-	"KC_ENV": "canary"
+	"KC_ENV": "canary",
+    "GOOGLE_PLACES_API_KEY": "AIzaSyBuAACZdJOJqcpzVtLicGCqgaVzT9d9HvE",
+    "GOOGLE_PLACES_OUTPUT_FORMAT": "json"
     }
   }]
 }
