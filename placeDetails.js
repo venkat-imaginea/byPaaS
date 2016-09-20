@@ -31,7 +31,7 @@ googlePlaces.placeSearch(parameters, function (error, response) {
 				console.log(err);
 				throw err;
 			}
-		    console.log(res.result.reviews, ' - Detailed Reviews');
+		    console.log(JSON.stringify(res.result.reviews), ' - Detailed Reviews');
 		});
 	}
 	
