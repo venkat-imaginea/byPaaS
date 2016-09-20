@@ -1,0 +1,16 @@
+{
+  "apps" : [{
+    "name"        : "paas",
+    "script"      : "bin/www",
+    "node_args"   : "--max_old_space_size=4096",
+    "watch"       : false,
+    "merge_logs"  : true,
+    "cwd"         : "/home/ubuntu/byPaaS",
+    "log_date_format" : "YYYY-MM-DD hh:mm:ss Z",
+    "max_memory_restart" : "400M",
+    "env": {
+	"PORT" : 1234,
+	"KC_ENV": "canary"
+    }
+  }]
+}
