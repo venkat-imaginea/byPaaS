@@ -21,7 +21,9 @@
     "jade": "~1.11.0",
     "morgan": "~1.6.1",
     "node-geocoder": "^3.15.0",
-    "serve-favicon": "~2.3.0"
+    "serve-favicon": "~2.3.0",
+    "sweet.js": "^0.7.7",
+    "cspjs": "^0.7.1"
   },
   "devDependencies": {
     "nodemon": "^1.10.2"
