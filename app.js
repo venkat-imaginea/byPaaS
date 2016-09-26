@@ -9,6 +9,9 @@ var bodyParser = require('body-parser');
 var sweet = require('sweet.js');
 sweet.loadMacro('cspjs');
 
+// Config initialization
+var config = require('./src/config').init();
+
 var routes = require('./routes/index');
 var places = require('./routes/places.sjs');
 

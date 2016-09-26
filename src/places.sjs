@@ -1,14 +1,12 @@
-var config = require("../config.js");
+var config = require('./config').root;
 
 var async = require("async");
 
 var GooglePlaces = require("googleplaces");
-var googlePlaces = new GooglePlaces(config.apiKey, config.outputFormat);
-var geoCode = require('../getBounds.js').geocode;
+var googlePlaces = new GooglePlaces(config.google.places.key, config.google.places.output_format);
+var geoCode = require('./getBounds.sjs').geocode;
 
 // var latLong = [13.082680, 80.270718];
-
-
 //var placeId = 'ChIJYTN9T-plUjoRM9RjaAunYW4';
 
 // Search for the Places nearby the 'location' provided
@@ -38,6 +36,7 @@ task search (data) {
 
 }
 
+// Get Reviews for the given 'restaurant place_id'
 task getReviews (data) {
 	catch (e) {
 		throw e;

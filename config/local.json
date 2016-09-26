@@ -1,0 +1,77 @@
+{
+  "base_url" : "http://localhost:3000",
+  "kc_url": "https://canary.knowncircle.com",
+  "env": "local",
+  "rabbitmq": {
+    "host": "rabbitmq.stage.internal.knowncircle.com",
+    "port": 5672,
+    "username": "kcadmin",
+    "password": "circl#123",
+    "topics": ["fullcontact", "birthdayalert"],
+    "exchange": {
+      "name": "webhook",
+      "type": "topic",
+      "options": {
+        "durable": true
+      },
+      "queues": [
+        {
+          "name": "fullcontact",
+          "options": {
+            "durable": true
+          },
+          "bindKey": "#.fullcontact.#",
+          "bindOptions": {}
+        },
+        {
+          "name": "newsfeed_fill",
+          "options": {
+            "durable": true
+          },
+          "bindKey": "#.newsfeed_fill.#",
+          "bindOptions": {}
+        },
+        {
+          "name": "newsfeed_crawl",
+          "options": {
+            "durable": true
+          },
+          "bindKey": "#.newsfeed_crawl.#",
+          "bindOptions": {}
+        },
+        {
+          "name": "birthdayalert",
+          "options": {
+            "durable": true
+          },
+          "bindKey": "#.birthdayalert.#",
+          "bindOptions": {}
+        }
+      ]
+    },
+    "dlx": {
+      "name": "webhook_retry",
+      "type": "topic",
+      "options": {
+        "durable": true
+      },
+      "queues": [
+        {
+          "name": "webhook_retry_q",
+          "options": {
+            "durable": true,
+            "deadLetterExchange": "webhook"
+          },
+          "bindKey": "#",
+          "bindOptions": {}
+        }
+      ]
+    }
+  },
+  "google": {
+    "places": {
+      "key": "AIzaSyBuAACZdJOJqcpzVtLicGCqgaVzT9d9HvE",
+      "output_format": "json"
+    }
+  }
+}

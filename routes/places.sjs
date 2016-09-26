@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var misc = require('../src/misc');
+var config = require('../src/config').root;
 var places = require('../src/places.sjs');
 
 /* GET users listing. */
