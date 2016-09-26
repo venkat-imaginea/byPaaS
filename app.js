@@ -5,12 +5,14 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
-var getPlaces = require('./routes/getPlaces');
 
 var sweet = require('sweet.js');
 sweet.loadMacro('cspjs');
+
+var routes = require('./routes/index');
+var places = require('./routes/places.sjs');
+
+
 
 var app = express();
 
@@ -27,8 +29,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
-app.use('/users', users);
-app.use('/getPlaces', getPlaces);
+app.use('/places', places);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
