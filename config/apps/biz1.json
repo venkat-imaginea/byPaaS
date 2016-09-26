@@ -1,0 +1,62 @@
+{
+  "log":["*"],
+  "bizid":":1",
+  "service": "places",
+  "source": [
+    {
+      "url": "https://api.twitter.com/1.1/search/tweets.json",
+      "params": [
+        {
+          "q": "rainfall"
+        },
+        {
+          "limit": 20
+        }
+      ]
+    },
+    {
+      "url": "https://maps.googleapis.com/maps/api/place/textsearch",
+      "params": [
+        {
+          "q": "hyderabad"
+        },
+        {
+          "limit": 20
+        }
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "type": "filter",
+      "handler": `function(doc, oldDoc) {
+          if(!doc.bizid && !doc._deleted){
+            throw({forbidden: 'No bizid in document'});
+          }
+          return doc.age > 18
+      }`
+    },
+    {
+      "type": "transform",
+      "handler":  `function(doc, meta) {
+          if(!doc.bizid){
+            throw({forbidden: 'No bizid in document'});
+          }
+          var name = doc.name.split(' ');
+          return {
+            id: doc.id,
+            first_name: name[0],
+            last_name: name[1],
+            age: 2016 - doc.dob.year
+          }
+      }`
+    }
+  ],
+  "db": {
+    "url": "any remote db endpoint that the user specifies"
+  },
+  "ratelimit": {
+    "max": 300,
+    "duration": 60000
+  }
+}
