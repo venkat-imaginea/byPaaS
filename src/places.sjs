@@ -38,5 +38,27 @@ task search (data) {
 
 }
 
+task getReviews (data) {
+	catch (e) {
+		throw e;
+	}
+	searchRes <- search(data);
+
+	var place_id = searchRes[1].place_id;
+	var reference = searchRes[1].reference;
+	err, response <<- googlePlaces.placeDetailsRequest({reference: reference});
+
+	if (err) {
+		console.log(err);
+		throw err;
+	}
+	// if (response.result.reviews) {
+ //    	console.log(JSON.stringify(response.result), ' - Detailed Reviews');
+	// }
+    return response.result;
+
+}
+
 exports.search = search;
+exports.getReviews = getReviews;
 
