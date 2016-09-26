@@ -12,8 +12,14 @@ router.get('/search', misc.route(searchPlaces));
 task searchPlaces(req, res) {
 	
 	results <- places.search(req.query);
-
-	res.json(results);
+	
+	if (results.length) {
+		res.json(results);
+	}
+	else {
+		res.json({status: 'failure', msg: 'No restaurants are found nearby!'});
+	}
+	
 }
 
 router.get('/reviews', misc.route(getReviews));
