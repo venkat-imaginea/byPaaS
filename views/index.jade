@@ -3,21 +3,3 @@ extends layout
 block content
   h1= title
   p Welcome to #{title}
-  form.form-a(name='loginForm', method='post', onsubmit="return kcApp.kclogin()")
-
-    .login-bin
-      input.redirect-on-login(type='hidden', value='')
-      .form-group
-        label.popover-label.text-bold(for='location') Location
-
-        input.form-control.login-field(type='text', name='location', id='location',
-           autocomplete='off')
-        p.error-text
-      .form-group.password-container
-        label.popover-label.text-bold(for='review') Reviews
-        input.form-control(type='checkbox', name='drilldown',
-          id='review', required)
-        p.error-text
-
-      .form-group.login-btn-container
-        button.btn.btn-primary.login-btn-lg(type='submit') Search
