@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon ./bin/www",
+    "start": "DEBUG=kc* nodemon ./bin/www",
     "watch": "DEBUG=kc* nodemon -e js,sjs,css  bin/www"
   },
   "author": "Venkat",

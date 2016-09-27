@@ -15,17 +15,31 @@ task getReviews (data) {
 		debug('Output of Source is not an array');
 		return false;
 	}
-	var place_id = data[1].place_id;
-	var reference = data[1].reference;
-	err, response <<- googlePlaces.placeDetailsRequest({reference: reference});
 
+	// async.mapLimit(data, 2, fetchDetails, function(err, netRes) {
+	// 	if (err) {
+	// 		console.log(err);
+	// 		throw err;
+	// 	}
+	// 	debug(netRes, ' - netRes');
+	// 	return netRes;
+	// });
+	err, netRes <<- async.mapLimit(data, 3, fetchDetails);
 	if (err) {
 		console.log(err);
 		throw err;
 	}
-	// if (response.result.reviews) {
- 	//    console.log(JSON.stringify(response.result), ' - Detailed Reviews');
-	// }
-    return response.result;
+	// debug(netRes, ' - netRes');
+	return netRes;
+}
+
+function fetchDetails (item, done) {
+	var place_id = item.place_id;
+	var reference = item.reference;
+	googlePlaces.placeDetailsRequest({reference: reference}, function(err, res) {
+		if (err)
+			done(err);
+		done(null, res.result);
+	});	
 }
 exports.process = getReviews;

@@ -57,7 +57,7 @@ function invokeSourceRules(sourceId, sourceData, options, callback) {
     var rule = null;
     // How was this rule triggered?
     // Can be source or webhook
-    var trigger = this.trigger || 'source';
+    var trigger = 'source';
 
     // Rules is a list of lambda function names
     fetchRulesForSource(sourceId, function(err, rules) {
@@ -65,7 +65,7 @@ function invokeSourceRules(sourceId, sourceData, options, callback) {
             return callback(err);
         }
         async.map(rules, async.reflect(async.apply(invokeRule, trigger, sourceData)), function(err, results) {
-            debug("invokeSourceRules result: " + JSON.stringify(results));
+            // debug("invokeSourceRules result: " + JSON.stringify(results));
             results = results.map(function(r, i) {
                 try {
                     var message = r.value ? (r.value.error ? r.value.error : r.value) : r.error;
@@ -119,6 +119,7 @@ function invokeSourceRules(sourceId, sourceData, options, callback) {
 
         debug("Invoking rule: " + rule.id + " of type: " + rule.type);
         result <- handler(sourceData);
+        debug(result, ' - net output');
         return result;
     }
 }
