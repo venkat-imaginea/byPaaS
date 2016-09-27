@@ -1,4 +1,4 @@
-var debug = require('debug')('kc-places:rule:restaurant-reviews');
+var debug = require('debug')('kc-places:rule:Details');
 var config = require('../../config').root;
 var utils = require('../utils');
 var async = require("async");
@@ -7,12 +7,12 @@ var GooglePlaces = require("googleplaces");
 var googlePlaces = new GooglePlaces(config.google.places.key, config.google.places.output_format);
 
 // Get Reviews for the given 'restaurant place_id'
-task getDetails (data) {
+task getDetails (data, cb) {
 	catch (e) {
 		throw e;
 	}
 	if (!Array.isArray(data)) {
-		debug('Output of Source is not an array');
+		debug('Received input is not an array');
 		return false;
 	}
 
@@ -21,10 +21,13 @@ task getDetails (data) {
 		console.log(err);
 		throw err;
 	}
+	debug('details op len - ', netRes.length);
+	cb(null, netRes);
+	// return netRes;
 
-	var reviews = netRes.filter(thoseWithReviews);
+	// var reviews = netRes.filter(thoseWithReviews);
 	// debug(netRes, ' - netRes');
-	return reviews;
+	// return reviews;
 }
 
 // Single Fetch operation

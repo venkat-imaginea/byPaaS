@@ -13,8 +13,18 @@ var Sources = {
 
 var Rules = {
   restaurants: [{
-    id: 'restaurant_reviews',
-    handler: require('./places/rules/restaurant_reviews.sjs'),
+    id: 'details',
+    handler: require('./places/rules/details.sjs'),
+    type: 'Event'
+  },
+  {
+    id: 'filter',
+    handler: require('./places/rules/filter.sjs'),
+    type: 'Event'
+  },
+  {
+    id: 'pick',
+    handler: require('./places/rules/pick.sjs'),
     type: 'Event'
   }]
 };
@@ -64,25 +74,35 @@ function invokeSourceRules(sourceId, sourceData, options, callback) {
         if (err) {
             return callback(err);
         }
-        async.map(rules, async.reflect(async.apply(invokeRule, trigger, sourceData)), function(err, results) {
-            // debug("invokeSourceRules result: " + JSON.stringify(results));
-            results = results.map(function(r, i) {
-                try {
-                    var message = r.value ? (r.value.error ? r.value.error : r.value) : r.error;
-                    if (message.Payload) {
-                        message.Payload = JSON.parse(message.Payload);
-                    }
-                } catch (ex) {}
-
-                return {
-                    id: rules[i].id,
-                    status: r.value && !r.value.error ? 'success' : 'error',
-                    message: message
-                }
-            });
-
-            callback(null, results);
+        var ruleHandlers = rules.map(function(d) { // Extracting the handlers of a Rule
+        	return d.handler.process
         });
+        ruleHandlers.unshift(function(cb) { // Initiating the waterfall with input data
+        	cb(null, sourceData);
+        });
+        async.waterfall(ruleHandlers, function(err, results) {
+        	debug('collective res - ', results);
+        	callback(null, results);
+        });
+        // async.map(rules, async.reflect(async.apply(invokeRule, trigger, sourceData)), function(err, results) {
+        //     // debug("invokeSourceRules result: " + JSON.stringify(results));
+        //     results = results.map(function(r, i) {
+        //         try {
+        //             var message = r.value ? (r.value.error ? r.value.error : r.value) : r.error;
+        //             if (message.Payload) {
+        //                 message.Payload = JSON.parse(message.Payload);
+        //             }
+        //         } catch (ex) {}
+
+        //         return {
+        //             id: rules[i].id,
+        //             status: r.value && !r.value.error ? 'success' : 'error',
+        //             message: message
+        //         }
+        //     });
+
+        //     callback(null, results);
+        // });
     });
 
     task invokeRule(trigger, sourceData, rule) {
@@ -120,7 +140,7 @@ function invokeSourceRules(sourceId, sourceData, options, callback) {
         debug("Invoking rule: " + rule.id + " of type: " + rule.type);
         result <- handler(sourceData);
 
-        debug(result, ' - net output');
+        debug(result.length, ' - net output length of rule - ', rule.id);
         
         return result;
     }
