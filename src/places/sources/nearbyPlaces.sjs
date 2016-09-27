@@ -10,8 +10,8 @@ task fetchNearbyPlaces (data) {
   catch (e) {
     throw e;
   }
-  var searchType = [data.type];
-  geoInfo <- utils.geoCode(data.place);
+  var searchType = [data.params.id];
+  geoInfo <- utils.geoCode(data.query.nearby);
   var latLong = [geoInfo[0].latitude, geoInfo[0].longitude];
   console.log('GeoCode - ', latLong);
 
@@ -26,9 +26,9 @@ task fetchNearbyPlaces (data) {
     throw error;
   } 
   // console.log('Search Results - ', response.results);  
-  console.log('=======================');
-  console.log('Totally Results fetched - ', response.results.length);
-  
+  // console.log('=======================');
+  // console.log('Totally Results fetched - ', response.results.length);
+
   return response.results;
 
 

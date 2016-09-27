@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var misc = require('../src/misc');
 var config = require('../src/config').root;
-var places = require('../src/places.sjs');
+var Places = require('../src/places.sjs');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -12,7 +12,7 @@ router.get('/', function(req, res, next) {
 router.get('/search', misc.route(searchPlaces));
 task searchPlaces(req, res) {
 	
-	results <- places.search(req.query);
+	results <- Places.search(req.query);
 	
 	if (results.length) {
 		res.json(results);
@@ -26,7 +26,7 @@ task searchPlaces(req, res) {
 router.get('/reviews', misc.route(getReviews));
 task getReviews(req, res) {
 	
-	results <- places.getReviews(req.query);
+	results <- Places.getReviews(req.query);
 
 	if (results.reviews) {
 		res.json(results.reviews);	
@@ -34,6 +34,17 @@ task getReviews(req, res) {
 	else {
 		res.json({status: 'failure', msg: 'No reviews for the given restaurant!'});
 	}
+}
+
+router.get('/source/:id', misc.route(trigger_source));
+task trigger_source(req, res) {
+  var shouldRulesBeApplied = false;
+  result <- Places.trigger(req, shouldRulesBeApplied);
+
+  res.json({
+    status: 'success',
+    result: result
+  });
 }
 
 module.exports = router;

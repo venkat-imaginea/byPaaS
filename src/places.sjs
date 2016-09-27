@@ -4,10 +4,46 @@ var async = require("async");
 
 var GooglePlaces = require("googleplaces");
 var googlePlaces = new GooglePlaces(config.google.places.key, config.google.places.output_format);
-var geoCode = require('./getBounds.sjs').geocode;
+var utils = require('./places/utils.sjs');
 
-// var latLong = [13.082680, 80.270718];
-//var placeId = 'ChIJYTN9T-plUjoRM9RjaAunYW4';
+var Sources = {
+  'restaurants': require('./places/sources/nearbyPlaces.sjs')
+};
+
+var Rules = {
+  reviews: [{
+    id: 'restaurant_reviews',
+    handler: require('./places/rules/restaurant_reviews.sjs'),
+    type: 'Event'
+  }]
+};
+
+
+// @param sourceId: ID of the source
+// @param triggerRules: Boolean to indicate if the rules tied to
+//   source have to be triggered
+//
+// @returns generated source data if triggerRules is false, else
+//    array of rules triggered with their status
+task sourceTrigger(req, triggerRules) {
+  
+  var sourceId = req.params.id;
+  if (!Sources[sourceId]) {
+    throw new Error("Feed source " + sourceId + " unknown");
+  }
+  
+  sourceData <- Sources[sourceId].source(req);
+
+  // console.log('from src output', sourceData);
+
+  if (triggerRules) {
+    // results <- invokeSourceRules(sourceId, sourceData, null);
+    return results;
+  }
+
+  return sourceData;
+}
+
 
 // Search for the Places nearby the 'location' provided
 task search (data) {
@@ -15,7 +51,7 @@ task search (data) {
 		throw e;
 	}
 	var searchType = [data.type];
-	geoInfo <- geoCode(data.place);
+	geoInfo <- utils.geoCode(data.place);
 	var latLong = [geoInfo[0].latitude, geoInfo[0].longitude];
 	console.log('GeoCode - ', latLong);
 
@@ -57,6 +93,8 @@ task getReviews (data) {
     return response.result;
 }
 
+exports.trigger = sourceTrigger;
+// exports.invokeSourceRules = invokeSourceRules;
 exports.search = search;
 exports.getReviews = getReviews;
 
