@@ -16,23 +16,18 @@ task getReviews (data) {
 		return false;
 	}
 
-	// async.mapLimit(data, 2, fetchDetails, function(err, netRes) {
-	// 	if (err) {
-	// 		console.log(err);
-	// 		throw err;
-	// 	}
-	// 	debug(netRes, ' - netRes');
-	// 	return netRes;
-	// });
 	err, netRes <<- async.mapLimit(data, 3, fetchDetails);
 	if (err) {
 		console.log(err);
 		throw err;
 	}
+
+	var reviews = netRes.filter(onlyReviews);
 	// debug(netRes, ' - netRes');
-	return netRes;
+	return reviews;
 }
 
+// Single Fetch operation
 function fetchDetails (item, done) {
 	var place_id = item.place_id;
 	var reference = item.reference;
@@ -41,5 +36,10 @@ function fetchDetails (item, done) {
 			done(err);
 		done(null, res.result);
 	});	
+}
+
+// Filters records with only Reviews
+function onlyReviews (item) {
+	return item.reviews
 }
 exports.process = getReviews;
