@@ -11,10 +11,12 @@ task getReviews (data) {
 	catch (e) {
 		throw e;
 	}
-	searchRes <- search(data);
-
-	var place_id = searchRes[1].place_id;
-	var reference = searchRes[1].reference;
+	if (!Array.isArray(data)) {
+		debug('Output of Source is not an array');
+		return false;
+	}
+	var place_id = data[1].place_id;
+	var reference = data[1].reference;
 	err, response <<- googlePlaces.placeDetailsRequest({reference: reference});
 
 	if (err) {
@@ -26,4 +28,4 @@ task getReviews (data) {
 	// }
     return response.result;
 }
-exports.invokeRule = getReviews;
+exports.process = getReviews;

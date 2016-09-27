@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var misc = require('../src/misc');
 var config = require('../src/config').root;
+var debug = require('debug')('kc-places:routes:places.sjs');
 var Places = require('../src/places.sjs');
 
 /* GET users listing. */
@@ -36,9 +37,10 @@ task getReviews(req, res) {
 	}
 }
 
+// http://localhost:1234/places/source/restaurants/?nearby=chennai&
 router.get('/source/:id', misc.route(trigger_source));
 task trigger_source(req, res) {
-  var shouldRulesBeApplied = false;
+  var shouldRulesBeApplied = !req.query.norules;
   result <- Places.trigger(req, shouldRulesBeApplied);
 
   res.json({

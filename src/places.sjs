@@ -1,3 +1,4 @@
+var debug = require('debug')('kc-places:places.src');
 var config = require('./config').root;
 
 var async = require("async");
@@ -11,7 +12,7 @@ var Sources = {
 };
 
 var Rules = {
-  reviews: [{
+  restaurants: [{
     id: 'restaurant_reviews',
     handler: require('./places/rules/restaurant_reviews.sjs'),
     type: 'Event'
@@ -31,18 +32,101 @@ task sourceTrigger(req, triggerRules) {
   if (!Sources[sourceId]) {
     throw new Error("Feed source " + sourceId + " unknown");
   }
-  
+
   sourceData <- Sources[sourceId].source(req);
 
   // console.log('from src output', sourceData);
 
   if (triggerRules) {
-    // results <- invokeSourceRules(sourceId, sourceData, null);
+    results <- invokeSourceRules(sourceId, sourceData, null);
     return results;
   }
 
   return sourceData;
 }
+
+
+// @param sourceId: ID of the source
+// @param sourceData: The input data
+// @param options: Options, or data returned from the
+//   previous dependencies when invoking through async.auto
+//
+// @returns array of objects with rule id, status and message
+function invokeSourceRules(sourceId, sourceData, options, callback) {
+    var triggered = [];
+    var rule = null;
+    // How was this rule triggered?
+    // Can be source or webhook
+    var trigger = this.trigger || 'source';
+
+    // Rules is a list of lambda function names
+    fetchRulesForSource(sourceId, function(err, rules) {
+        if (err) {
+            return callback(err);
+        }
+        async.map(rules, async.reflect(async.apply(invokeRule, trigger, sourceData)), function(err, results) {
+            debug("invokeSourceRules result: " + JSON.stringify(results));
+            results = results.map(function(r, i) {
+                try {
+                    var message = r.value ? (r.value.error ? r.value.error : r.value) : r.error;
+                    if (message.Payload) {
+                        message.Payload = JSON.parse(message.Payload);
+                    }
+                } catch (ex) {}
+
+                return {
+                    id: rules[i].id,
+                    status: r.value && !r.value.error ? 'success' : 'error',
+                    message: message
+                }
+            });
+
+            callback(null, results);
+        });
+    });
+
+    task invokeRule(trigger, sourceData, rule) {
+        var handler = null;
+
+        catch (e) {
+            debug("invokeRule_error: " + (e.message || e.toString()));
+            return {
+                error: e.message || e.toString()
+            };
+        }
+
+        switch (trigger) {
+            case 'webhook':
+                {
+                    if (rule.handler && typeof rule.handler.webhookTransform === 'function') {
+                        sourceData <- rule.handler.webhookTransform(sourceData);
+                        debug("Transformed source: " + JSON.stringify(sourceData));
+                    }
+                }
+
+            case 'source':
+                {
+                    if (rule.handler && typeof rule.handler.process === 'function') {
+                        handler = async.apply(rule.handler.process);
+                    }
+                }
+        }
+
+        if (!handler) {
+            console.log('No Handler...');
+            // handler = async.apply(utils.invokeLambda, rule.id, rule.type);
+        }
+
+        debug("Invoking rule: " + rule.id + " of type: " + rule.type);
+        result <- handler(sourceData);
+        return result;
+    }
+}
+
+task fetchRulesForSource(sourceId) {
+  return Rules[sourceId];
+}
+
 
 
 // Search for the Places nearby the 'location' provided
@@ -94,7 +178,7 @@ task getReviews (data) {
 }
 
 exports.trigger = sourceTrigger;
-// exports.invokeSourceRules = invokeSourceRules;
+exports.invokeSourceRules = invokeSourceRules;
 exports.search = search;
 exports.getReviews = getReviews;
 
