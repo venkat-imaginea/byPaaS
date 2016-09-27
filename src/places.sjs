@@ -52,10 +52,9 @@ task getReviews (data) {
 		throw err;
 	}
 	// if (response.result.reviews) {
- //    	console.log(JSON.stringify(response.result), ' - Detailed Reviews');
+ 	//    console.log(JSON.stringify(response.result), ' - Detailed Reviews');
 	// }
     return response.result;
-
 }
 
 exports.search = search;
