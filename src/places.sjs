@@ -119,7 +119,9 @@ function invokeSourceRules(sourceId, sourceData, options, callback) {
 
         debug("Invoking rule: " + rule.id + " of type: " + rule.type);
         result <- handler(sourceData);
+
         debug(result, ' - net output');
+        
         return result;
     }
 }
