@@ -30,7 +30,7 @@ task sourceTrigger(req, triggerRules) {
   
   var sourceId = req.params.id;
   if (!Sources[sourceId]) {
-    throw new Error("Feed source " + sourceId + " unknown");
+    throw new Error("Place source " + sourceId + " unknown");
   }
 
   sourceData <- Sources[sourceId].source(req);

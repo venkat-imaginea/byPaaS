@@ -7,7 +7,7 @@ var GooglePlaces = require("googleplaces");
 var googlePlaces = new GooglePlaces(config.google.places.key, config.google.places.output_format);
 
 // Get Reviews for the given 'restaurant place_id'
-task getReviews (data) {
+task getDetails (data) {
 	catch (e) {
 		throw e;
 	}
@@ -16,19 +16,19 @@ task getReviews (data) {
 		return false;
 	}
 
-	err, netRes <<- async.mapLimit(data, 3, fetchDetails);
+	err, netRes <<- async.mapLimit(data, 3, fetchForOneRecord);
 	if (err) {
 		console.log(err);
 		throw err;
 	}
 
-	var reviews = netRes.filter(onlyReviews);
+	var reviews = netRes.filter(thoseWithReviews);
 	// debug(netRes, ' - netRes');
 	return reviews;
 }
 
 // Single Fetch operation
-function fetchDetails (item, done) {
+function fetchForOneRecord (item, done) {
 	var place_id = item.place_id;
 	var reference = item.reference;
 	googlePlaces.placeDetailsRequest({reference: reference}, function(err, res) {
@@ -39,7 +39,7 @@ function fetchDetails (item, done) {
 }
 
 // Filters records with only Reviews
-function onlyReviews (item) {
+function thoseWithReviews (item) {
 	return item.reviews
 }
-exports.process = getReviews;
+exports.process = getDetails;
