@@ -12,12 +12,6 @@ var Sources = manifest.Sources;
 var Rules = manifest.Rules;
 
 
-// @param placeType: ID of the source
-// @param triggerRules: Boolean to indicate if the rules tied to
-//   source have to be triggered
-//
-// @returns generated source data if triggerRules is false, else
-//    array of rules triggered with their status
 task sourceTrigger(req, triggerRules) {
   
   var placeType = req.params.type;
@@ -38,12 +32,6 @@ task sourceTrigger(req, triggerRules) {
 }
 
 
-// @param sourceId: ID of the source
-// @param sourceData: The input data
-// @param options: Options, or data returned from the
-//   previous dependencies when invoking through async.auto
-//
-// @returns array of objects with rule id, status and message
 function invokeSourceRules(sourceId, sourceData, options, callback) {
     var triggered = [];
     var rule = null;
