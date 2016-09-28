@@ -8,29 +8,31 @@ var googlePlaces = new GooglePlaces(config.google.places.key, config.google.plac
 var utils = require('./places/utils.sjs');
 
 var Sources = {
-  'restaurants': require('./places/sources/nearbyPlaces.sjs')
+  places: require('./places/sources/nearbyPlaces.sjs')
 };
 
 var Rules = {
-  restaurants: [{
-    id: 'details',
-    handler: require('./places/rules/details.sjs'),
-    type: 'Event'
-  },
-  {
-    id: 'filter',
-    handler: require('./places/rules/filter.sjs'),
-    type: 'Event'
-  },
-  {
-    id: 'pick',
-    handler: require('./places/rules/pick.sjs'),
-    type: 'Event'
-  }]
+  places: {
+  	restaurants: [{
+	    id: 'details',
+	    handler: require('./places/rules/details.sjs'),
+	    type: 'Event'
+	  },
+	  {
+	    id: 'filter',
+	    handler: require('./places/rules/filter.sjs'),
+	    type: 'Event'
+	  },
+	  {
+	    id: 'pick',
+	    handler: require('./places/rules/pick.sjs'),
+	    type: 'Event'
+	}]	
+  }
 };
 
 
-// @param sourceId: ID of the source
+// @param placeType: ID of the source
 // @param triggerRules: Boolean to indicate if the rules tied to
 //   source have to be triggered
 //
@@ -38,17 +40,17 @@ var Rules = {
 //    array of rules triggered with their status
 task sourceTrigger(req, triggerRules) {
   
-  var sourceId = req.params.id;
-  if (!Sources[sourceId]) {
-    throw new Error("Place source " + sourceId + " unknown");
+  var placeType = req.params.type;
+  if (!Sources['places']) {
+    throw new Error("Place source " + placeType + " unknown");
   }
 
-  sourceData <- Sources[sourceId].source(req);
+  sourceData <- Sources['places'].source(req);
 
   // console.log('from src output', sourceData);
 
   if (triggerRules) {
-    results <- invokeSourceRules(sourceId, sourceData, null);
+    results <- invokeSourceRules(placeType, sourceData, null);
     return results;
   }
 
@@ -147,7 +149,7 @@ function invokeSourceRules(sourceId, sourceData, options, callback) {
 }
 
 task fetchRulesForSource(sourceId) {
-  return Rules[sourceId];
+  return Rules['places'][sourceId] || [];
 }
 
 

@@ -5,10 +5,6 @@ var config = require('../src/config').root;
 var debug = require('debug')('kc-places:routes:places.sjs');
 var Places = require('../src/places.sjs');
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
 
 router.get('/search', misc.route(searchPlaces));
 task searchPlaces(req, res) {
@@ -37,10 +33,11 @@ task getReviews(req, res) {
 	}
 }
 
-// http://localhost:1234/places/source/restaurants/?nearby=chennai&
-router.get('/source/:id', misc.route(trigger_source));
+// /places/['type']?nearby=chennai&applyrules=true
+// e.g. http://localhost:1234/places/hospital?nearby=hyderabad
+router.get('/:type', misc.route(trigger_source));
 task trigger_source(req, res) {
-  var shouldRulesBeApplied = !req.query.norules;
+  var shouldRulesBeApplied = req.query.applyrules || false;
   result <- Places.trigger(req, shouldRulesBeApplied);
 
   res.json({
