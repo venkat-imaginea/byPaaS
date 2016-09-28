@@ -1,35 +1,15 @@
 var debug = require('debug')('kc-places:places.src');
-var config = require('./config').root;
+var config = require('./config').root; // framework config
+var manifest = require('./places/manifest'); // api config
 
 var async = require("async");
 
-var GooglePlaces = require("googleplaces");
-var googlePlaces = new GooglePlaces(config.google.places.key, config.google.places.output_format);
+// var GooglePlaces = require("googleplaces");
+// var googlePlaces = new GooglePlaces(config.google.places.key, config.google.places.output_format);
 var utils = require('./places/utils.sjs');
 
-var Sources = {
-  places: require('./places/sources/nearbyPlaces.sjs')
-};
-
-var Rules = {
-  places: {
-  	restaurants: [{
-	    id: 'details',
-	    handler: require('./places/rules/details.sjs'),
-	    type: 'Event'
-	  },
-	  {
-	    id: 'filter',
-	    handler: require('./places/rules/filter.sjs'),
-	    type: 'Event'
-	  },
-	  {
-	    id: 'pick',
-	    handler: require('./places/rules/pick.sjs'),
-	    type: 'Event'
-	}]	
-  }
-};
+var Sources = manifest.Sources;
+var Rules = manifest.Rules;
 
 
 // @param placeType: ID of the source
@@ -169,7 +149,7 @@ task search (data) {
 	  types: searchType
 	};
 
-	error, response <<- googlePlaces.placeSearch(parameters);
+	error, response <<- manifest.googlePlaces.placeSearch(parameters);
 	if (error) {
 		console.log(error);
 		throw error;
@@ -190,7 +170,7 @@ task getReviews (data) {
 
 	var place_id = searchRes[1].place_id;
 	var reference = searchRes[1].reference;
-	err, response <<- googlePlaces.placeDetailsRequest({reference: reference});
+	err, response <<- manifest.googlePlaces.placeDetailsRequest({reference: reference});
 
 	if (err) {
 		console.log(err);
