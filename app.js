@@ -15,8 +15,6 @@ var config = require('./src/config').init();
 var routes = require('./routes/index');
 var places = require('./routes/places.sjs');
 
-
-
 var app = express();
 
 // view engine setup
@@ -32,7 +30,13 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
-app.use('/places', places);
+
+app.use('/places', places); // For Places API
+
+// app.use('/:bypaas', function (req, res, next) {
+//   console.log('Request Type:', req.method);
+//   next();
+// });
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
