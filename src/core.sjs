@@ -1,4 +1,4 @@
-var debug = require('debug')('kc-places:places.src');
+var debug = require('debug')('kc-bypaas:src:core');
 var config = require('./config').root; // framework config
 var manifest = require('./places/manifest'); 
 var App = manifest.App; // Client-App config

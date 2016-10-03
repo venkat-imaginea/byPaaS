@@ -51,7 +51,7 @@ App Configuration Prototype:
 	rules: {
 		places: {
 			restaurants: {
-				type: waterfall, // waterfall/parallel mode of execution
+				type: "parallel", // waterfall/parallel mode of execution. Default: waterfall
 				set: [{
 					id: '',
 					handler: require('./rules/details.sjs'),
