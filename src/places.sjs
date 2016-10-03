@@ -51,11 +51,16 @@ function invokeSourceRules(sourceId, sourceData, options, callback) {
         	cb(null, sourceData);
         });
 
-        if (rules.type === 'waterfall') {
-        	async.waterfall(ruleHandlers, function(err, results) {
-	        	debug('collective res - ', results);
-	        	callback(null, results);
+        if (rules.type === 'waterfall') { // waterfall flow of execution
+        	async.waterfall(ruleHandlers, function(err, result) {
+	        	debug('collective waterfall res - ', result);
+	        	callback(null, result);
 	        });	
+        } else { // parallel flow of execution
+        	async.parallel(ruleHandlers, function(err, result) {
+        		debug('collective parallel res - ', result);
+	        	callback(null, result);
+        	});
         }
         // async.map(rules, async.reflect(async.apply(invokeRule, trigger, sourceData)), function(err, results) {
         //     // debug("invokeSourceRules result: " + JSON.stringify(results));

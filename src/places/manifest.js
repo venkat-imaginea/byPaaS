@@ -55,7 +55,7 @@ App Configuration Prototype:
 				set: [{
 					id: '',
 					handler: require('./rules/details.sjs'),
-					type: ''
+					type: 'Lambda'
 				},
 				{
 				    id: 'filter',
