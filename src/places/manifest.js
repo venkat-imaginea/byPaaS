@@ -24,8 +24,8 @@ Rules = {
 	}
 }
 
-Config Json:
------------
+App Configuration Prototype:
+----------------------------
 {
 	bizid: "user1",
 	sources: [{
