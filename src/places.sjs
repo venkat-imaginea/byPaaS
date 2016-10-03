@@ -1,6 +1,7 @@
 var debug = require('debug')('kc-places:places.src');
 var config = require('./config').root; // framework config
-var manifest = require('./places/manifest'); // api config
+var manifest = require('./places/manifest'); 
+var App = manifest.App; // Client-App config
 
 var async = require("async");
 
@@ -8,22 +9,21 @@ var async = require("async");
 // var googlePlaces = new GooglePlaces(config.google.places.key, config.google.places.output_format);
 var utils = require('./places/utils.sjs');
 
-var Sources = manifest.Sources;
-var Rules = manifest.Rules;
+var Sources = App.sources;
+var Rules = App.rules;
 
 
 task sourceTrigger(req, triggerRules) {
   
   var placeType = req.params.type;
-  if (!Sources['places']) {
-    throw new Error("Place source " + placeType + " unknown");
+  if (!Sources.length) {
+    throw new Error("No source list definition");
   }
 
-  sourceData <- Sources['places'].source(req);
+  sourceData <- Sources[0].handler.source(req);
 
   // console.log('from src output', sourceData);
-
-  if (triggerRules) {
+  if (triggerRules === 'true') {
     results <- invokeSourceRules(placeType, sourceData, null);
     return results;
   }
@@ -44,16 +44,19 @@ function invokeSourceRules(sourceId, sourceData, options, callback) {
         if (err) {
             return callback(err);
         }
-        var ruleHandlers = rules.map(function(d) { // Extracting the handlers of a Rule
+        var ruleHandlers = rules.set.map(function(d) { // Extracting the handlers of a Rule
         	return d.handler.process
         });
         ruleHandlers.unshift(function(cb) { // Initiating the waterfall with input data
         	cb(null, sourceData);
         });
-        async.waterfall(ruleHandlers, function(err, results) {
-        	debug('collective res - ', results);
-        	callback(null, results);
-        });
+
+        if (rules.type === 'waterfall') {
+        	async.waterfall(ruleHandlers, function(err, results) {
+	        	debug('collective res - ', results);
+	        	callback(null, results);
+	        });	
+        }
         // async.map(rules, async.reflect(async.apply(invokeRule, trigger, sourceData)), function(err, results) {
         //     // debug("invokeSourceRules result: " + JSON.stringify(results));
         //     results = results.map(function(r, i) {
