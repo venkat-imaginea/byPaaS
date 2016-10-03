@@ -7,12 +7,16 @@ var Core = require('../src/core.sjs');
 
 
 
-// /bypaas /['appId']/['appParam']?nearby=chennai&applyrules=true
+// /bypaas /['appId']/['appType']?nearby=chennai&applyrules=true
 // e.g. http://localhost:1234/bypaas /places/hospital?nearby=hyderabad
 router.get('/:appId/:appType', misc.route(trigger_source));
 task trigger_source(req, res) {
+  debug(req.params, 'req.params');
+
+  // var Core = require('../src/core.sjs');
+  
   var shouldRulesBeApplied = req.query.applyrules || false;
-  result <- Core.trigger(req, shouldRulesBeApplied);
+  result <- Core.init(req, shouldRulesBeApplied);
 
   res.json({
     status: 'success',

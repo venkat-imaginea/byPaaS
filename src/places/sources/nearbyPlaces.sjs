@@ -10,7 +10,7 @@ task fetchNearbyPlaces (data) {
   catch (e) {
     throw e;
   }
-  var searchType = [data.params.type];
+  var searchType = [data.params.appType];
   geoInfo <- utils.geoCode(data.query.nearby);
   var latLong = [geoInfo[0].latitude, geoInfo[0].longitude];
   console.log('GeoCode - ', latLong);
