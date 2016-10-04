@@ -9,19 +9,11 @@ var appId = "";
 
 
 
-
-
-
-
-
-
-
 task init (req, triggerRules) {
   
-  var appId = req.params.appId,
-      appType = req.params.appType;
+  var options = req.params;
 
-  var manifest = require('./' + appId + '/manifest'); 
+  var manifest = require('./' + options.appId + '/manifest'); 
   var App = manifest.App; // Client-App config
   var Sources = App.sources;
   // var Rules = App.rules;
@@ -33,9 +25,8 @@ task init (req, triggerRules) {
 
   sourceData <- Sources[0].handler.source(req);
 
-  // console.log('from src output', sourceData);
-  if (triggerRules === 'true') {
-    results <- invokeSourceRules(appId, appType, sourceData, null);
+  if (triggerRules) {
+    results <- invokeSourceRules(options, sourceData, null);
     return results;
   }
 
@@ -43,7 +34,7 @@ task init (req, triggerRules) {
 }
 
 
-function invokeSourceRules(appId, sourceId, sourceData, options, callback) {
+function invokeSourceRules(app, sourceData, options, callback) {
     var triggered = [];
     var rule = null;
     // How was this rule triggered?
@@ -51,7 +42,7 @@ function invokeSourceRules(appId, sourceId, sourceData, options, callback) {
     var trigger = 'source';
 
     // Rules is a list of lambda function names
-    fetchRulesForSource(sourceId, function(err, rules) {
+    fetchRulesForSource(app, function(err, rules) {
         if (err) {
             return callback(err);
         }
@@ -63,6 +54,7 @@ function invokeSourceRules(appId, sourceId, sourceData, options, callback) {
         });
 
         if (rules.type === 'waterfall') { // waterfall flow of execution
+            debug(ruleHandlers);
         	async.waterfall(ruleHandlers, function(err, result) {
 	        	debug('collective waterfall res - ', result);
 	        	callback(null, result);
@@ -135,11 +127,12 @@ function invokeSourceRules(appId, sourceId, sourceData, options, callback) {
     }
 }
 
-task fetchRulesForSource(appId, sourceId) {
-  var manifest = require('./' + appId + '/manifest'); 
-  var App = manifest.App; // Client-App config
-  var Rules = App.rules;
-  return Rules[appId][sourceId] || [];
+task fetchRulesForSource(app) {
+  var id = app.appId;
+  var type = app.appType;
+  var App = require('./' + id + '/manifest').App; // Client-App config
+
+  return App.rules[id][type] || [];
 }
 
 

@@ -12,10 +12,11 @@ var Core = require('../src/core.sjs');
 router.get('/:appId/:appType', misc.route(trigger_source));
 task trigger_source(req, res) {
   debug(req.params, 'req.params');
+  debug(req.query, 'req.query');
 
   // var Core = require('../src/core.sjs');
   
-  var shouldRulesBeApplied = req.query.applyrules || false;
+  var shouldRulesBeApplied = req.query.applyrules === 'true' ? true : false;
   result <- Core.init(req, shouldRulesBeApplied);
 
   res.json({

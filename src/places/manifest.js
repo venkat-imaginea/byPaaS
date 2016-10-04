@@ -50,7 +50,7 @@ App Configuration Prototype:
 	}],
 	rules: {
 		places: {
-			restaurants: {
+			restaurant: {
 				type: "parallel", // waterfall/parallel mode of execution. Default: waterfall
 				set: [{
 					id: '',
@@ -133,7 +133,7 @@ exports.App = {
 	}],
 	rules: {
 		places: {
-			restaurants: {
+			restaurant: {
 				type: "waterfall", // waterfall/parallel mode of execution
 				set: [{
 					id: '',
