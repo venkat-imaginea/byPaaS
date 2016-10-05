@@ -4,7 +4,7 @@ var utils = require('../utils');
 var async = require("async");
 
 var GooglePlaces = require("googleplaces");
-var googlePlaces = new GooglePlaces(config.google.places.key, config.google.places.output_format);
+var googlePlaces = new GooglePlaces(config.supported_apps.google.places.key, config.supported_apps.google.places.output_format);
 
 // Get Reviews for the given 'restaurant place_id'
 task getDetails (data, cb) {

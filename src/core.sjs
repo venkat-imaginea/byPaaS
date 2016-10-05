@@ -22,7 +22,7 @@ task init (req, triggerRules) {
   if (!Sources.length) {
     throw new Error("No source list definition");
   }
-
+  
   sourceData <- Sources[0].handler.source(req);
 
   if (triggerRules) {
@@ -33,6 +33,9 @@ task init (req, triggerRules) {
   return sourceData;
 }
 
+task triggerSource () {
+
+}
 
 function invokeSourceRules(app, sourceData, options, callback) {
     var triggered = [];

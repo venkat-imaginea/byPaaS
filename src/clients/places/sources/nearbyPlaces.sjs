@@ -3,7 +3,7 @@ var config = require('../../../config').root;
 var utils = require('../utils.sjs');
 
 var GooglePlaces = require("googleplaces");
-var googlePlaces = new GooglePlaces(config.google.places.key, config.google.places.output_format);
+var googlePlaces = new GooglePlaces(config.supported_apps.google.places.key, config.supported_apps.google.places.output_format);
 
 // Search for the Places nearby the 'location' provided
 task fetchNearbyPlaces (data) {
@@ -25,9 +25,6 @@ task fetchNearbyPlaces (data) {
     console.log(error);
     throw error;
   } 
-  // console.log('Search Results - ', response.results);  
-  // console.log('=======================');
-  // console.log('Totally Results fetched - ', response.results.length);
 
   return response.results;
 

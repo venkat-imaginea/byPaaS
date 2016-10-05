@@ -9,8 +9,8 @@ var options = {
  
   // Optional depending on the providers 
   httpAdapter: 'https', // Default 
-  apiKey: config.google.places.key, // for Mapquest, OpenCage, Google Premier 
-  formatter: config.google.places.output_format // 'gpx', 'string', ... 
+  apiKey: config.supported_apps.google.places.key, // for Mapquest, OpenCage, Google Premier 
+  formatter: config.supported_apps.google.places.output_format // 'gpx', 'string', ... 
 };
  
 var geocoder = NodeGeocoder(options);
