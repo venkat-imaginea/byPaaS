@@ -1,5 +1,5 @@
 var debug = require('debug')('kc-places:rule:Pick');
-var config = require('../../config').root;
+var config = require('../../../config').root;
 
 
 // Get Only reviews for the given set of place docs

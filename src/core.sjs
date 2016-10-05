@@ -2,7 +2,7 @@ var debug = require('debug')('kc-bypaas:src:core');
 var async = require("async");
 var config = require('./config').root; // framework config
 
-var appId = "";
+var clientPath = './clients/';
 // var manifest = require('./places/manifest'); 
 // var App = manifest.App; // Client-App config
 // var utils = require('./places/utils.sjs');
@@ -13,7 +13,7 @@ task init (req, triggerRules) {
   
   var options = req.params;
 
-  var manifest = require('./' + options.appId + '/manifest'); 
+  var manifest = require(clientPath + options.appId + '/manifest'); 
   var App = manifest.App; // Client-App config
   var Sources = App.sources;
   // var Rules = App.rules;
@@ -130,7 +130,7 @@ function invokeSourceRules(app, sourceData, options, callback) {
 task fetchRulesForSource(app) {
   var id = app.appId;
   var type = app.appType;
-  var App = require('./' + id + '/manifest').App; // Client-App config
+  var App = require(clientPath + id + '/manifest').App; // Client-App config
 
   return App.rules[id][type] || [];
 }

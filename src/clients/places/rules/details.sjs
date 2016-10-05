@@ -1,5 +1,5 @@
 var debug = require('debug')('kc-places:rule:Details');
-var config = require('../../config').root;
+var config = require('../../../config').root;
 var utils = require('../utils');
 var async = require("async");
 

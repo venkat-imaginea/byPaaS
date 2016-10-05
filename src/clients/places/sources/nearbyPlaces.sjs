@@ -1,5 +1,5 @@
 var debug = require('debug')('kc-places:source:nearbyPlaces');
-var config = require('../../config').root;
+var config = require('../../../config').root;
 var utils = require('../utils.sjs');
 
 var GooglePlaces = require("googleplaces");

@@ -15,7 +15,6 @@ var config = require('./src/config').init();
 var routes = require('./routes/index');
 var bypaas = require('./routes/core.sjs');
 
-// var places = require('./routes/places.sjs');
 
 var app = express();
 
@@ -34,7 +33,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 
 app.use('/bypaas', bypaas); // Core routes
-// app.use('/places', places); // For Places API
 
 
 // app.use('/:bypaas', function (req, res, next) {

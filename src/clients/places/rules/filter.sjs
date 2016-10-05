@@ -1,5 +1,5 @@
 var debug = require('debug')('kc-places:rule:Filter');
-var config = require('../../config').root;
+var config = require('../../../config').root;
 
 
 // Filter the places with the given set of detailed docs

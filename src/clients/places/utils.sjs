@@ -1,5 +1,5 @@
 
-var config = require('../config').root;
+var config = require('../../config').root;
 var debug = require('debug')('kc-places:utils');
 
 var NodeGeocoder = require('node-geocoder');
