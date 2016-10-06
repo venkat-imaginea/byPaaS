@@ -21,13 +21,7 @@ task getDetails (data, cb) {
 		console.log(err);
 		throw err;
 	}
-	debug('details op len - ', netRes.length);
 	cb(null, netRes);
-	// return netRes;
-
-	// var reviews = netRes.filter(thoseWithReviews);
-	// debug(netRes, ' - netRes');
-	// return reviews;
 }
 
 // Single Fetch operation

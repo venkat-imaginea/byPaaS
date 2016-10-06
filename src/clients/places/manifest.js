@@ -84,41 +84,24 @@ App Configuration Prototype:
 }
 
 */
-// exports.Sources = {
-//   places: require('./sources/nearbyPlaces.sjs')
-// };
-
-// exports.Rules = {
-//   places: {
-//   	restaurants: [{
-// 	    id: 'details',
-// 	    handler: require('./rules/details.sjs'),
-// 	    type: 'Event'
-// 	  },
-// 	  {
-// 	    id: 'filter',
-// 	    handler: require('./rules/filter.sjs'),
-// 	    type: 'Event'
-// 	  },
-// 	  {
-// 	    id: 'pick',
-// 	    handler: require('./rules/pick.sjs'),
-// 	    type: 'Event'
-// 	}]	
-//   }
-// };
 
 // Client-App config
 exports.App = {
 	bizid: "user1",
 	sources: [{
 		id: 'places',
-		service: 'google_places', // specifying one of the framework subscribed services
-		credentials: { // if user-context level, else framework config can be used
-			key: "AIzaSyBuAACZdJOJqcpzVtLicGCqgaVzT9d9HvE",
-			output_format: "json"
+		service: { // specifying one of the framework subscribed services
+ 			id: 'google', 
+ 			type: 'places',
+			credentials: { // if user-context level, else framework config can be used (optional)
+				key: "AIzaSyBuAACZdJOJqcpzVtLicGCqgaVzT9d9HvE",
+				output_format: "json"
+			}
 		},
 		fetch: {
+			input: {
+
+			},
 			mode: "poll", // poll/push
 			frequency: 3000, // 3s
 			ratelimit: {

@@ -7,8 +7,6 @@ var clientPath = './clients/';
 // var App = manifest.App; // Client-App config
 // var utils = require('./places/utils.sjs');
 
-
-
 task init (req, triggerRules) {
   
   var options = req.params;
@@ -22,6 +20,8 @@ task init (req, triggerRules) {
   if (!Sources.length) {
     throw new Error("No source list definition");
   }
+  // Under each sources i, source
+  // err, res <<- triggerSource(Sources[0]);
   
   sourceData <- Sources[0].handler.source(req);
 
@@ -33,9 +33,36 @@ task init (req, triggerRules) {
   return sourceData;
 }
 
-task triggerSource () {
+task triggerSource (src) {
+  catch (e) {
+    throw e;
+  }
+  // var creds = src.credentials || null;
+  // var service = src.service && src.service.id; // e.g. 'google'
+  // await loadDeps(src.service);
 
+  var searchType = [data.params.appType];
+  geoInfo <- utils.geoCode(data.query.nearby);
+  var latLong = [geoInfo[0].latitude, geoInfo[0].longitude];
+  console.log('GeoCode - ', latLong);
+
+  var parameters = {
+    location: latLong,
+    types: searchType
+  };
+
+  error, response <<- googlePlaces.placeSearch(parameters);
+  if (error) {
+    console.log(error);
+    throw error;
+  } 
+
+  return response.results;
 }
+
+task loadDeps (service) {
+    return "";
+}   
 
 function invokeSourceRules(app, sourceData, options, callback) {
     var triggered = [];
@@ -57,14 +84,13 @@ function invokeSourceRules(app, sourceData, options, callback) {
         });
 
         if (rules.type === 'waterfall') { // waterfall flow of execution
-            debug(ruleHandlers);
         	async.waterfall(ruleHandlers, function(err, result) {
-	        	debug('collective waterfall res - ', result);
+	        	// debug('collective waterfall res - ', result);
 	        	callback(null, result);
 	        });	
         } else { // parallel flow of execution
         	async.parallel(ruleHandlers, function(err, result) {
-        		debug('collective parallel res - ', result);
+        		// debug('collective parallel res - ', result);
 	        	callback(null, result);
         	});
         }
