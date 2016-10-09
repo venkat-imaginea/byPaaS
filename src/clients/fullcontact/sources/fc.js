@@ -22,6 +22,7 @@ exports.source = function fetchFC (req, callback) {
 
 function getFullContact(email, cb){
   var fullContactUrl = 'https://api.fullcontact.com/v2/person.json?apiKey=' + fcKey + '&prettyPrint=false&email=';
+  var fullContactOrgUrl = 'https://api.fullcontact.com/v2/company/lookup.json?apiKey=' + fcKey + '&prettyPrint=false&domain=';
   var fcUrl = fullContactUrl+encodeURIComponent(email); // 'person' api
   debug('Fetching FullContact data from - ', fcUrl);
   request.get({url: fcUrl, timeout: 4000}, function(err, resp, body){
