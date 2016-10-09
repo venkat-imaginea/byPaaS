@@ -4,6 +4,5 @@ exports.process = function extractOrg (input, cb) {
 
 	// do some stuff here
 	var data = "";
-	debug(input, 'rule');
-	cb(null, data);
+	cb(null, input);
 }
