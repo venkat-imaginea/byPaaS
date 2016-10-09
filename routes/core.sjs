@@ -8,7 +8,10 @@ var Core = require('../src/core.sjs');
 
 
 // /bypaas /['appId']/['appType']?nearby=chennai&applyrules=true
-// e.g. http://localhost:1234/bypaas /places/hospital?nearby=hyderabad
+
+// e.g.
+// http://localhost:1234/bypaas /places/restaurant?nearby=chennai
+// http://localhost:1234/bypaas /fullcontact/person?email=venkat.crescentian@gmail.com     
 router.get('/:appId/:appType', misc.route(trigger_source));
 task trigger_source(req, res) {
   debug(req.params, 'req.params');

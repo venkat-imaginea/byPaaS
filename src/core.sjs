@@ -3,9 +3,6 @@ var async = require("async");
 var config = require('./config').root; // framework config
 
 var clientPath = './clients/';
-// var manifest = require('./places/manifest'); 
-// var App = manifest.App; // Client-App config
-// var utils = require('./places/utils.sjs');
 
 task init (req, triggerRules) {
   
@@ -16,7 +13,6 @@ task init (req, triggerRules) {
   var Sources = App.sources;
   // var Rules = App.rules;
   // var utils = require('./places/utils.sjs');
-
   if (!Sources.length) {
     throw new Error("No source list definition");
   }
