@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon ./bin/www",
+    "start": "DEBUG=kc* nodemon ./bin/www",
     "watch": "DEBUG=kc* nodemon -e js,sjs,css  bin/www"
   },
   "author": "Venkat",
@@ -23,7 +23,8 @@
     "node-geocoder": "^3.15.0",
     "serve-favicon": "~2.3.0",
     "sweet.js": "^0.7.7",
-    "cspjs": "^0.7.1"
+    "cspjs": "^0.7.1",
+    "request": "^2.69.0"
   },
   "devDependencies": {
     "nodemon": "^1.10.2",

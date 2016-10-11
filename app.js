@@ -13,8 +13,7 @@ sweet.loadMacro('cspjs');
 var config = require('./src/config').init();
 
 var routes = require('./routes/index');
-var places = require('./routes/places.sjs');
-
+var bypaas = require('./routes/core.sjs');
 
 
 var app = express();
@@ -32,7 +31,14 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
-app.use('/places', places);
+
+app.use('/bypaas', bypaas); // Core routes
+
+
+// app.use('/:bypaas', function (req, res, next) {
+//   console.log('Request Type:', req.method);
+//   next();
+// });
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

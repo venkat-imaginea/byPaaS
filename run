@@ -10,8 +10,8 @@ sweet.loadMacro('cspjs');
 
 require(process.argv.pop()).main(function(err, res) {
   if (err) {
+  	console.log(err.stack);
     throw err;
   }
-
   process.exit(0);
 });
